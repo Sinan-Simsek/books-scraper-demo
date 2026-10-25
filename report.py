@@ -86,7 +86,8 @@ def write_excel(df: pd.DataFrame, summary: pd.DataFrame, quality: dict, path: Pa
 
 def write_html(df: pd.DataFrame, summary: pd.DataFrame, quality: dict, images: dict, path: Path) -> None:
     e = html.escape
-    kpis = [("Books", f"{len(df):,}"), ("Categories", f"{df['category'].nunique()}"),
+    real_categories = df.loc[df["category"] != "Uncategorized", "category"].nunique()
+    kpis = [("Books", f"{len(df):,}"), ("Categories", f"{real_categories}"),
             ("Avg price", f"£{df['price_gbp'].mean():.2f}"), ("Units in stock", f"{int(df['stock'].sum()):,}")]
     kpi_html = "".join(f'<div class="kpi"><span>{e(k)}</span><b>{e(v)}</b></div>' for k, v in kpis)
     rows = "".join(
